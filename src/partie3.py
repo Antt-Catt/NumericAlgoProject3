@@ -11,10 +11,11 @@ def transfo_qr(U, V, S):
         V = Q1.T@V
     return (U, S, V)
 
-
-U = np.identity(4)
-V = np.identity(4)
-S = np.array([[1,2,0,0],[0,5,8,0],[0,0,3,2],[0,0,0,2]])
-print(transfo_qr(U,V,S)[0])
-print(transfo_qr(U,V,S)[1])
-print(transfo_qr(U,V,S)[2])
+if __name__ == "__main__":
+    np.set_printoptions(precision=4, suppress=True)
+    U = np.identity(4)
+    V = np.identity(4)
+    S = np.array([[1,2,0,0],[0,5,8,0],[0,0,3,2],[0,0,0,2]])
+    print(transfo_qr(U,V,S)[0])
+    print(transfo_qr(U,V,S)[1])
+    print(transfo_qr(U,V,S)[2])
