@@ -7,22 +7,23 @@ import matplotlib.pyplot as plt
 
 #PARTIE 1: MATRICE DE HOUSEHOLDER
 
-#Question préliminaire
+#1- CONSRUCTION DE LA MATRICE DE HOUSEHOLDER
 
-def vect_N (U, V) :
-    S = U - V
-    norme = np.linalg.norm(S)
-    N = S / norme
+#1-1 Construction du vecteur N
+def vect_N(U, V) :
+    S=U-V
+    norme=np.linalg.norm(S)
+    N=S/norme
     return N
 
-#La matrice de Householder
+#1-2 La matrice de Householder
 
 def householder_mat(U, V) :
-    N = vect_N (U, V)
-    H = np.eye(len(U)) - 2*N*np.transpose(N)
+    N=vect_N (U, V)
+    H=np.eye(len(U))-2*N*np.transpose(N)
     return H
 
-#Test de fonctionnement
+#1-3 Test de fonctionnement
 
 U=np.array([[3],[4],[0]])
 V=np.array([[0],[0],[5]])
