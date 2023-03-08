@@ -1,0 +1,103 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%% Lengths %%%%%%%%%%%%%%%%
+\setlength{\textwidth}{15.5cm}
+\setlength{\evensidemargin}{0.5cm}
+\setlength{\oddsidemargin}{0.5cm}
+
+%%%%%%%%%%%%%%%% Variables %%%%%%%%%%%%%%%%
+\def\projet{3}
+\def\titre{Compression d'image à travers la factorisation SVD}
+\def\groupe{4}
+\def\equipe{6}
+\def\responsible{jeamartinez}
+\def\secretary{acattarin}
+\def\others{mchellaf, siducamp}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%% Header %%%%%%%%%%%%%%%%
+\noindent\begin{minipage}{0.98\textwidth}
+  \vskip 0mm
+  \noindent
+  { \begin{tabular}{p{7.5cm}}
+      {\bfseries \sffamily
+        Projet \projet} \\ 
+      {\itshape \titre}
+    \end{tabular}}
+  \hfill 
+  \fbox{\begin{tabular}{l}
+      {~\hfill \bfseries \sffamily Groupe \groupe\ - Equipe \equipe
+        \hfill~} \\[2mm] 
+      Responsable : \responsible \\
+      Secrétaire : \secretary \\
+      Codeurs : \others
+    \end{tabular}}
+  \vskip 4mm ~
+
+  ~~~\parbox{0.95\textwidth}{\small \textit{Résumé~:} \sffamily }
+  \vskip 1mm ~
+\end{minipage}
+
+%%%%%%%%%%%%%%%% Main part %%%%%%%%%%%%%%%%
+\section{Transformation de Householder}
+\label{sec:transfo_householder}
+
+\subsection{Construction d'une matrice de Householder}
+\label{ssec:construc_householder}
+
+\subsection{Application d'une matrice de Householder}
+\label{ssec:appli_householder}
+
+\subsection{Etude de compléxité}
+\label{ssec:complex_householder}
+
+
+\section{Mise sous forme bidiagonale}
+\label{sec:forme_bidiag_}
+
+\subsection{Implémentation}
+\label{ssec:implem_bidiag_}
+
+\subsection{Analyse}
+\label{ssec:analyse_bidiag}
+
+
+\section{Transformations QR}
+\label{sec:transfo_qr}
+
+\subsection{Implémentation}
+\label{ssec:implem_qr}
+
+\subsection{Etude de convergence}
+\label{ssec:conv_qr}
+
+\subsection{Analyse}
+\label{ssec:analyse_qr}
+
+\subsection{Optimisation pour une matrice bidiagonale}
+\label{ssec:opti_bidiag_qr}
+
+\subsection{Mise en forme}
+\label{ssec:mise_en_forme_qr}
+
+
+\section{Application à la compression d'image}
+\label{sec:appli_compr_img}
+
+\subsection{Compression}
+\label{ssec:compr_img}
+
+\subsection{Analyse quantitative}
+\label{ssec:quanti_img}
+
+\subsection{Analyse qualitative}
+\label{ssec:quali_img}
+
+\end{document}
