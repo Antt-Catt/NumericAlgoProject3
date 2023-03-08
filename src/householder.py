@@ -32,3 +32,12 @@ H=householder_mat(U, V)
 print(H.dot(U))
 #+end_src
 
+
+#2- APPLICATION D'UNE MATRICE DE HOUSEHOLDER
+
+#2-1 Produit d'une matrice de Householder par un vecteur
+
+def produit(U, V, vect) :
+    H = householder_mat(U, V)
+    P = H*vect
+    return P
