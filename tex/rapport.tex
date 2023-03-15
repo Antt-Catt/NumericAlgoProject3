@@ -2,6 +2,7 @@
 
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[]{amsmath}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{hyperref}
@@ -60,9 +61,42 @@
 \subsection{Application d'une matrice de Householder}
 \label{ssec:appli_householder}
 
+Soient deux vecteurs $\vec{u}$ et $\vec{v}$ dont on déduit une matrice de Householder $H_{\vec{u},\vec{v}}$.
+Soit un vecteur $\vec{a}$ sur lequel on veut appliquer la matrice de Householder. Les vecteurs sont tous de longueur $n$.
+
+On va utiliser la réécriture $H = I_d - 2 \times N \cdot N^t$ pour écrire un algorithme optimisé de l'application
+de $H_{\vec{u},\vec{v}}$.
+
+\begin{align}
+  \label{eq:opti_app_hh}
+  H_{\vec{u},\vec{v}} \cdot \vec{a} &= (I_d - 2 \times N \cdot N^t) \cdot \vec{a} \\
+                                    &= \vec{a} - 2 \times N \cdot N^t \cdot \vec{a} \\
+                                    &= \vec{a} - 2 \times N \cdot \underbrace{(N^t \cdot \vec{a})}_{\text{scalaire}} \\
+                                    &= \vec{a} - 2 \times \underbrace{(N^t \cdot \vec{a})}_{\text{scalaire}} \cdot N
+\end{align}
+
+Alors on peut en déduire un algorithme qui va appliquer directement la matrice $H_{\vec{u},\vec{v}}$ sur $\vec{a}$ à
+partir de $\vec{u}$ et $\vec{v}$, et ce en utilisant un unique produit scalaire. Sa complexité est donc en $O(n)$
+
 \subsection{Etude de compléxité}
 \label{ssec:complex_householder}
 
+Soient une matrice $A$ représentant un ensemble de vecteurs et deux vecteurs $\vec{u}$ et $\vec{v}$ dont
+on déduit une matrice de Householder $H_{\vec{u},\vec{v}}$
+Appelons $n$ la taille de chacun des vecteurs. \newline
+
+Le produit matriciel entre $H_{\vec{u},\vec{v}}$ et $A$ naïf requiert en premier lieu la construction de 
+la matrice de Householder $H_{\vec{u},\vec{v}}$ en brut. L'algorithme construisant la matrice de Householder
+effectue une multiplication matrice-vecteur de complexité $O(n^2)$. Par la suite, la multiplication matrice-matrice
+entre $H_{\vec{u},\vec{v}}$ et $A$ va demander une complexité $O(n^3)$, en effet l'algorithme fait pour chaque
+case $(i,j)$ de la matrice un produit scalaire ligne-colonne de complexité $O(n)$, en sachant que $H_{\vec{u},\vec{v}}$ a $n$ lignes
+et colonnes.
+
+Le produit matriciel entre $H_{\vec{u},\vec{v}}$ et $A$ optimisé va utiliser la réécriture de la matrice de Householder :
+$H = I_d - 2 \times N \cdot N^t$. 
+On va utiliser l'application de la matrice de Householder présentée dans la sous-section \ref{ssec:appli_householder} sur 
+chaque vecteur colonne de la matrice $A$, sachant que cette application est en complexité $O(n)$ (un simple produit scalaire).
+L'algorithme ne va alors effectuer qu'un produit vectoriel par colonne de la matrice $A$, ce qui nous donne une complexité en $O(n^2)$.
 
 \section{Mise sous forme bidiagonale}
 \label{sec:forme_bidiag_}
