@@ -8,32 +8,38 @@ def vect_ei(n,i):
     vect[i] = 1
     return vect
 
+def padWithId(Q, n):
+    k = Q.shape[0]
+    pad_width = ((n-k, 0), (n-k, 0))  # la taille du padding
+    M_pad = np.pad(Q, pad_width, mode='constant')  # la matrice avec le padding
+    for i in range(n-k):
+        M_pad[i,i] = 1
+    return M_pad
+
 def to_bidiag(BD):
-    n = np.shape(BD)[0]
-    m = np.shape(BD)[1]
+    n, m = BD.shape
     Qleft = np.identity(n)
     Qright = np.identity(m)
-    print("Init Qright = ", Qright)
+    print(BD)
     for i in range(n):
-        Q1 = partie1.householder_mat(BD[i:n,i], vect_ei(n, i))
-        print("Q1 = ", Q1)
+        print(i)
+        Q1 = partie1.householder_mat(BD[i:n,i], vect_ei(n-i, 0) * np.linalg.norm(BD[i:n,i]))
+        Q1 = padWithId(Q1,n)
         Qleft = Qleft@Q1
-        print("Qleft = ", Qleft)
         BD = Q1@BD
+        print(BD)
         if i != (m - 2):
-            Q2 = partie1.householder_mat(BD[i,(i+1):m], vect_ei(m-1, i))
-            print("Q1 = ", Q1)
-            print("Q2 = ", Q2)
+            Q2 = partie1.householder_mat(BD[i,(i+1):m], vect_ei(m-i-1, 0)* np.linalg.norm(BD[i,(i+1):m]))
+            Q2 = padWithId(Q2,m)
             Qright = Q2@Qright
-            print("Qright = ", Qright)
             BD = BD@Q2
-        print("BD = ", BD)
+        print(BD, "\n", Qleft @ BD @ Qright)
     return (Qleft, BD, Qright)
 
-if __name__ == "__main__":
-    A = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,16]])
-    print(A[0,(0+1):np.shape(A)[1]])
-    print(to_bidiag(A))
 
-    # A = np.array([[1,2,3,4], [2,3,4,5], [3,4,5,6]])
-    # print(to_bidiag(Q1,Q2,A))
+if __name__ == "__main__":
+    # A = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,16]])
+    # print(to_bidiag(A))
+
+    A = np.array([[1,2,3], [3,4,5], [5,6,7], [7,8,9]])
+    print(to_bidiag(A))
