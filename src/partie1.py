@@ -25,9 +25,11 @@ def householder_mat(U, V) :
 
 #2-1 Produit d'une matrice de Householder par un vecteur
 
+#Version primaire (non optimale)
 def produit(U, V, vect) :
     return householder_mat(U, V).dot(vect)
 
+#Version optimale
 def produit_opti(U, V, vect) :
     N = vect_N(U, V)
     return vect - 2*np.dot(np.transpose(vect),N)*N
@@ -54,14 +56,15 @@ if __name__ == "__main__":
     print(H.dot(T))
 
 
-    #2-1 Test du produit par HH
-    # print(produit(U, V, T))
-    # print(produit_opti(U, V, T))
+#2-1 Test du produit par HH
+# print(produit(U, V, T))
+# print(produit_opti(U, V, T))
 
-    #2-2 Test du produit matriciel par HH
-    K = np.hstack((U, V, T))
-    print(K)
-    print(H@K)
-    print(produit_mat_opti(U, V, K))
 
-    #+end_src
+#2-2 Test du produit matriciel par HH
+K = np.hstack((U, V, T))
+print(K)
+print(H@K)
+print(produit_mat_opti(U, V, K))
+
+#+end_src

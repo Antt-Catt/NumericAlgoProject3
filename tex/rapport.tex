@@ -120,6 +120,26 @@ L'algorithme ne va alors effectuer qu'un produit vectoriel par colonne de la mat
 \subsection{Analyse}
 \label{ssec:analyse_qr}
 
+La matrice $S$ est bidiagonale dès le début de la fonction.
+
+Pour chaque itération de la boucle \verb|for| de la fonction \verb|transfo_qr| :
+\smallskip
+
+\noindent La matrice $R1$ est obtenue grâce à une décomposition QR de $S$.
+
+\noindent La matrice $R2$ est obtenue grâce à une décomposition QR de $R2$.
+
+\noindent La matrice $S$ prend les valeurs de $R2$.
+
+\smallskip
+Or, la matrice obtenue avec une décomposition QR d'une matrice bidiagonale est également bidiagonale. %à prouver ?
+
+A la première itération, $R1$ est donc bidiagonale (issue de la décomposition QR de $S$). De même, $R2$ est également bidiagonale. Finalement, $S$ prend les valeurs de $R2$. L'invariant est donc vrai après la première itération.
+
+\smallskip
+
+Nous prouvons l'induction exactement de la même manière, puisque nous supposons que $S$ est bidiagonale au début de l'itération.
+
 \subsection{Optimisation pour une matrice bidiagonale}
 \label{ssec:opti_bidiag_qr}
 
