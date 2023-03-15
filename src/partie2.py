@@ -20,26 +20,25 @@ def to_bidiag(BD):
     n, m = BD.shape
     Qleft = np.identity(n)
     Qright = np.identity(m)
-    print(BD)
     for i in range(n):
-        print(i)
         Q1 = partie1.householder_mat(BD[i:n,i], vect_ei(n-i, 0) * np.linalg.norm(BD[i:n,i]))
         Q1 = padWithId(Q1,n)
         Qleft = Qleft@Q1
         BD = Q1@BD
-        print(BD)
-        if i != (m - 2):
+        if i==m-1 :
+            break
+        if i != (m - 2) :
             Q2 = partie1.householder_mat(BD[i,(i+1):m], vect_ei(m-i-1, 0)* np.linalg.norm(BD[i,(i+1):m]))
             Q2 = padWithId(Q2,m)
             Qright = Q2@Qright
             BD = BD@Q2
-        print(BD, "\n", Qleft @ BD @ Qright)
     return (Qleft, BD, Qright)
 
 
 if __name__ == "__main__":
-    # A = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,16]])
-    # print(to_bidiag(A))
+    A = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,16]])
+    print(to_bidiag(A))
 
     A = np.array([[1,2,3], [3,4,5], [5,6,7], [7,8,9]])
+    np.set_printoptions(formatter={'float': lambda x: "{0:0.1f}".format(x)})
     print(to_bidiag(A))
