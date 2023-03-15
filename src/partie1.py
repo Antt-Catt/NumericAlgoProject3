@@ -20,14 +20,14 @@ def vect_N(U, V) :
 
 def householder_mat(U, V) :
     N=vect_N (U, V)
-    H=np.eye(len(U))-2*N*np.transpose(N)
+    H=np.eye(len(U))-2*np.dot(N,np.transpose(N))
     return H
 
 #2-1 Produit d'une matrice de Householder par un vecteur
 
 #Version primaire (non optimale)
 def produit(U, V, vect) :
-    return householder_mat(U, V).dot(vect)
+    return np.dot(householder_mat(U, V), vect)
 
 #Version optimale
 def produit_opti(U, V, vect) :
@@ -39,7 +39,7 @@ def produit_opti(U, V, vect) :
 def produit_mat_opti(U, V, M):
     N = vect_N(U, V)
     R = np.empty((np.shape(M)[0],0))
-    for i in range(np.shape(M)[0]):
+    for i in range(np.shape(M)[1]):
         column = np.reshape(M[:,i], (np.shape(M)[0], 1))
         vect = column - 2*np.dot(np.transpose(column),N)*N
         R = np.hstack((R, vect))
@@ -56,15 +56,23 @@ if __name__ == "__main__":
     print(H.dot(T))
 
 
-#2-1 Test du produit par HH
-# print(produit(U, V, T))
-# print(produit_opti(U, V, T))
+    #2-1 Test du produit par HH
+    # print(produit(U, V, T))
+    # print(produit_opti(U, V, T))
 
 
-#2-2 Test du produit matriciel par HH
-K = np.hstack((U, V, T))
-print(K)
-print(H@K)
-print(produit_mat_opti(U, V, K))
+    #2-2 Test du produit matriciel par HH
+    K = np.hstack((U, V, T))
+    # print(K)
+    # print(H@K)
+    # print(produit_mat_opti(U, V, K))
 
-#+end_src
+    np.set_printoptions(formatter={'float': lambda x: "{0:0.1f}".format(x)})
+    A = np.array([[1,2,3], [3,4,5], [5,6,7], [7,8,9]])
+    HH = householder_mat(A[0:4,0], np.array([1, 0, 0, 0]) * np.linalg.norm(A[0:4,0]))
+    print(HH)
+    print(produit(A[0:4,0], np.array([1, 0, 0, 0]) * np.linalg.norm(A[0:4,0]), A[0:4,0]))
+    print(produit_opti(A[0:4,0], np.array([1, 0, 0, 0]) * np.linalg.norm(A[0:4,0]), A[0:4,0]))
+    print(produit_mat_opti(A[0:4,0], np.array([1, 0, 0, 0]) * np.linalg.norm(A[0:4,0]), A[0:4,0]))
+
+    #+end_src
