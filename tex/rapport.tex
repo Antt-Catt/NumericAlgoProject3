@@ -55,11 +55,24 @@
 \section{Transformation de Householder}
 \label{sec:transfo_householder}
 
+Nous allons en premier lieu mettre en place les fonctions nécessaires à la manipulation de matrices de Householder.
+En particulier nous allons créer 3 algorithmes :
+\begin{itemize}
+  \item householder\_mat(U, V) qui crée la matrice de Householder projetant U sur V
+  \item produit\_opti(U, V, vect) qui effectue la multiplication de la matrice de Householder
+  $H_{\vec{u},\vec{v}}$ sur le vecteur $vect$ de manière optimisée
+  \item produit\_mat\_opti(U, V, M) qui effectue la multiplication de la matrice de Householder
+  $H_{\vec{u},\vec{v}}$ sur la matrice $M$ de manière optimisée
+\end{itemize}
+
 \subsection{Construction d'une matrice de Householder}
 \label{ssec:construc_householder}
 
 \subsection{Application d'une matrice de Householder}
 \label{ssec:appli_householder}
+
+Nous allons à présent expliquer la mise au point de l'algorithme produit\_opti(U, V, vect), qui fait la multiplication
+$H_{\vec{u},\vec{v}} \cdot vect$ de manière optimisée
 
 Soient deux vecteurs $\vec{u}$ et $\vec{v}$ dont on déduit une matrice de Householder $H_{\vec{u},\vec{v}}$.
 Soit un vecteur $\vec{a}$ sur lequel on veut appliquer la matrice de Householder. Les vecteurs sont tous de longueur $n$.
@@ -77,6 +90,8 @@ de $H_{\vec{u},\vec{v}}$.
 
 Alors on peut en déduire un algorithme qui va appliquer directement la matrice $H_{\vec{u},\vec{v}}$ sur $\vec{a}$ à
 partir de $\vec{u}$ et $\vec{v}$, et ce en utilisant un unique produit scalaire. Sa complexité est donc en $O(n)$
+
+En utilisant la même relation sur $H_{\vec{u},\vec{v}}$, on peut construire l'algorithme produit\_mat\_opti de manière analogue.
 
 \subsection{Etude de compléxité}
 \label{ssec:complex_householder}
@@ -101,12 +116,65 @@ L'algorithme ne va alors effectuer qu'un produit vectoriel par colonne de la mat
 \section{Mise sous forme bidiagonale}
 \label{sec:forme_bidiag_}
 
+Afin de transformer une matrice sous la forme SVD, on va d'abord chercher à la bidiagonaliser.
+Pour ce faire nous allons utiliser l'algorithme dit de \href[]{https://en.wikipedia.org/wiki/Bidiagonalization}{Golub-Kahan}.
+
 \subsection{Implémentation}
 \label{ssec:implem_bidiag_}
+
+L'algorithme consiste à multiplier alternativement la matrice en entrée par des matrices de Householder droites et gauches.
+Pour ce faire, on extrait à chaque tour de boucle un vecteur ligne ou colonne de la matrice en entrée pour en déduire une matrice de Householder,
+puis on "pad" la matrice de Householder avec en bas à droite le corps de la matrice, en haut à gauche une matrice identité et des 0 aux autres endroits,
+comme le montre le schéma \ref{img:pad_HH}.
+Cela garantit la préservation de la dimension de la matrice.
+
+\begin{figure}
+  \label{img:pad_HH}
+  \centering
+  \includegraphics[width=10cm]{../files/hh_padded.png}
+\end{figure}
 
 \subsection{Analyse}
 \label{ssec:analyse_bidiag}
 
+Nous allons prouver la conservation de l'invariant $Q_{left} \times BD \times Q_{right} = A$ 
+à chaque tour de boucle de l'algorithme, à l'aide d'une preuve par induction.
+
+\textbf{Initialisation}: Au début de la première itération de la boucle, 
+Qleft et Qright sont tous deux égaux à la matrice identité, et BD est égal à la matrice A. 
+Ainsi, $Q_{left} \times BD \times Q_{right} = I_d \times A \times I_d = A$, 
+ce qui prouve que l'invariant est vérifié au premier tour de boucle.
+
+\textbf{Hypothèse d'induction}: Supposons que l'invariant est vrai pour une certaine itération i de la boucle,
+c'est-à-dire que $Q_{left_i} \times BD_i \times Q_{right_i} = A$, où $Q_{left_i}$, $BD_i$ et $Q_{right_i}$
+sont les matrices calculées à la fin de l'itération i.
+
+\textbf{Étape d'induction}: Nous devons montrer que l'invariant est également vrai pour l'itération suivante i+1. 
+Pendant cette itération, nous appliquons d'abord une transformation Householder Q1 à la matrice BD pour annuler 
+tous les éléments sous la diagonale de la colonne i. Nous mettons à jour Qleft et BD en multipliant par Q1 et Q1 $\times$ BD, respectivement. 
+Ensuite, si i n'est pas égal à m-2, nous appliquons une deuxième transformation Householder Q2 à la matrice BD 
+pour annuler tous les éléments à droite de la ligne i. Nous mettons à jour Qright et BD en multipliant par Q2 et BD $\times$ Q2, respectivement.
+
+Ainsi, à la fin de l'itération i+1, nous avons:
+
+\begin{itemize}
+  \item $BD_{i+1} = Q_{1} \times BD_{i} \times Q_{2}$ si i!=m-2 et $BD_{i+1} = BD_{i}$ sinon
+  \item $Q_{left_{i+1}} = Q_{left_{i}} * Q1$
+  \item $Q_{right_{i+1}} = Q2 * Q_{right_{i}}$
+\end{itemize}
+
+Par conséquent,
+\begin{align}
+  Q_{left_{i+1}} * BD_{i+1} * Q_{right_{i+1}} &= Q_{left_{i}} * Q_1 * Q_2 * BD_{i} * Q_1 * Q_2 * Q_{right_{i}} \\
+                                          &= Q_{left_{i}} * BD_{i} * Q_{right_{i}} \\
+                                          &= A
+\end{align}
+
+
+Ainsi, l'invariant est également vrai à l'itération i+1.
+
+Par conséquent, nous pouvons conclure que l'invariant est vrai pour toutes les itérations de la boucle, ce qui signifie que $Q_{left} \times BD \times Q_{right} = A$ à la fin de l'algorithme.
+Cette affirmation se vérifie dans les tests grâce à l'algorithme implémenté en Python qui affiche ce produit à chaque tour de boucle.
 
 \section{Transformations QR}
 \label{sec:transfo_qr}
