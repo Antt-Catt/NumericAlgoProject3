@@ -39,11 +39,10 @@ def produit_opti(U, V, vect) :
 def produit_mat_opti(U, V, M):
     N = vect_N(U, V)
     R = np.empty((np.shape(M)[0],0))
-    for i in range(np.shape(M)[0]):
-        print(M[:,i])
-        column = np.reshape(M[:,i], (np.shape(M)[0], 1))
-        vect = column - 2*np.dot(np.transpose(column),N)*N
-        R = np.hstack((R, vect))
+    for i in range(np.shape(M)[1]):
+        vect = M[:,i] - 2*np.dot(np.transpose(M[:,i]),N)*N
+        column = np.reshape(vect, (np.shape(M)[0], 1))
+        R = np.hstack((R, column))
     return R
 
 if __name__ == "__main__":
@@ -67,5 +66,13 @@ if __name__ == "__main__":
     # print(K)
     # print(H@K)
     # print(produit_mat_opti(U, V, K))
+
+    A = np.array([[1,2,3], [3,4,5], [5,6,7], [7,8,9]])
+    print(np.shape(A))
+    print(A[:,0])
+    ei = np.array([1, 0, 0, 0])
+    print(produit_mat_opti(A[0:4,0], ei * np.linalg.norm(A[0:4,0]), A))
+
+    
 
     #+end_src
