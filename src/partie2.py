@@ -34,7 +34,7 @@ def to_bidiag(BD):
             Q2 = padWithId(Q2,m)
             Qright = Q2@Qright
             BD = BD@Q2
-        print(Qleft @ BD @ Qright)
+        #print(Qleft @ BD @ Qright)
     return (Qleft, BD, Qright)
 
 

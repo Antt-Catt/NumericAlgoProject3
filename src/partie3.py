@@ -1,31 +1,30 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import partie1
+import partie2
 
 #Entrée : U et V matrices identités, S matrice bidiagonale
 #Sortie : (U,S,V) mmatrices de décomposition SVD, avec S diagonale
 def transfo_qr(U, V, S):
-    # conv_array = []
-    for i in range(10):
+    conv_array = []
+    for i in range(100):
+        diff = 0 # initialise le compteur d'elt extradiagonaux
+        for j in range(np.shape(S)[0]):
+            for k in range(np.shape(S)[1]):
+                if j != k:
+                    if S[j][k] > 10**-5 or S[j][k] < -10**-5: # verifie si l'elt extradiagonal est non-negligeable (precision de 10^-5 ici)
+                        diff += 1
+        conv_array.append(diff)
         (Q1, R1) = np.linalg.qr(S.T)
         (Q2, R2) = np.linalg.qr(R1.T)
         S = R2
         U = U@Q2
         V = Q1.T@V
-    #     diff = 0
-    #     for j in range(np.shape(S)[0]):
-    #         for k in range(np.shape(S)[1]):
-    #             print(S[j][k])
-    #             if j != k and S[j][k] > 10^-5:
-    #                 diff += 1
-    #     print(S, "S")
-    #     conv_array.append(diff)
-    # print(conv_array)
-    # plt.plot(conv_array)
-    # plt.xlabel("Itérations")
-    # plt.ylabel("Résidus")
-    # plt.title("Résidus de la méthode du gradient conjugué sans préconditionneur")
-    # plt.show()
+    plt.plot(conv_array)
+    plt.yticks(range(int(min(conv_array)), int(max(conv_array))+1)) # graduations entières
+    plt.xlabel("Itérations")
+    plt.ylabel("Nombre d'EENN")
+    plt.show()
     return (U, S, V)
 
 def change_U_S(U, S):
@@ -89,3 +88,8 @@ if __name__ == "__main__":
     print(test2[0], "moi")
     print(test1[1], "np")
     print(test2[1], "moi")
+
+    U = np.eye(10, 10)
+    V = np.eye(10, 10)
+    S = partie2.to_bidiag(np.random.rand(10,10))[1]
+    res = transfo_qr(U,V,S)
