@@ -180,11 +180,59 @@ Cette affirmation se vérifie dans les tests grâce à l'algorithme implémenté
 \section{Transformations QR}
 \label{sec:transfo_qr}
 
-\subsection{Implémentation}
-\label{ssec:implem_qr}
-
 \subsection{Etude de convergence}
 \label{ssec:conv_qr}
+
+Nous allons tester et montrer la convergence de l'algorithme vers un matrice diagonale. Pour cela nous allons compter le nombre d'éléments extradiagonaux non-négligeable (EENN) avec une précision de $10^-5$. Les graphiques \ref{subfig:4x4_conv_diag} et \ref{subfig:10x10_conv_diag} donnent ce nombre pour des matrices 4x4 et 10x10.
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]
+    \includegraphics[width=8cm]{../files/conv_diag_4x4.png}
+    \caption{Nombre d'EENN de la matrice S 4x4 selon les itérations de l'algorithme de décomposition QR}
+    \label{subfig:4x4_conv_diag}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]
+    \includegraphics[width=8cm]{../files/conv_diag_10x10.png}
+    \caption{{Nombre d'EENN de la matrice S 10x10 selon les itérations de l'algorithme de décomposition QR}
+    \label{subfig:10x10_grad_prcd}
+  \end{subfigure}
+\end{figure}
+
+On observe bien la convergence vers un nombre d'EENN égal à 0.
+
+\bigskip
+
+Montrons que l'invariant $U \times S \times V = BD$ est toujours vérifié.
+
+Au début de l'algorithme, on a $U = V = Id$ et $S = BD$, d'où $U \times S \times V = BD$.
+
+Supposons l'invariant vrai en début de la nième itération de la boucle. Lors ce cette itération, on a successivement :
+
+\begin{itemize}
+\item $Q_1R_1 = S^t$
+\item $Q_2R_2 = R_1^t$
+\item $S' = R_2$
+\item $U' = UQ_2$
+\item $V' = Q_1^tV$
+\end{itemize}
+
+\smallskip
+Nous voulons ici prouver que $U' \times S \times V' = BD$
+
+Ainsi,
+\begin{align}
+   U' \times S \times V' &= U \times Q_2 \times R_2 \times Q_1^t \times V \\
+   &= U \times R_1^t \times Q_1^t \times V \\
+   &= U \times (Q_1 \times R_1)^t \times V \\
+   &= U \times (S^t)^t \times V \\
+   &= U \times S \times V = BD
+\end{align}
+
+\smallskip
+
+L'invariant $U \times S \times V = BD$ est donc vrai en fin de la nième boucle, et donc vérifié à la fin de l'algorithme.
 
 \subsection{Analyse}
 \label{ssec:analyse_qr}
@@ -201,7 +249,7 @@ Pour chaque itération de la boucle \verb|for| de la fonction \verb|transfo_qr| 
 \noindent La matrice $S$ prend les valeurs de $R2$.
 
 \smallskip
-Or, la matrice obtenue avec une décomposition QR d'une matrice bidiagonale est également bidiagonale. %à prouver ?
+Or, la matrice obtenue avec une décomposition QR d'une matrice bidiagonale est également bidiagonale.
 
 A la première itération, $R1$ est donc bidiagonale (issue de la décomposition QR de $S$). De même, $R2$ est également bidiagonale. Finalement, $S$ prend les valeurs de $R2$. L'invariant est donc vrai après la première itération.
 
