@@ -65,10 +65,7 @@ if __name__ == "__main__":
 
     img_comp = compressRGB(img_full, k)
 
-    map_compression_efficiency(img_full)
-    print("Map ok !")
+    # map_compression_efficiency(img_full)
+    # print("Map ok !")
 
-    # for x in np.nditer(img_comp):
-    #     if x>=1 :
-    #         print(x, end=' ')
     plt.imsave("../files/p3_compress.png", img_comp)
