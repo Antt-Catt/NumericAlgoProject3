@@ -19,8 +19,10 @@ def vect_N(U, V) :
 #1-2 La matrice de Householder
 
 def householder_mat(U, V) :
-    N=vect_N (U, V)
-    H=np.eye(len(U))-2*np.outer(N,N)
+    if np.all(U == V) or np.all(U == -V):
+        return np.eye(len(U))
+    N = vect_N(U, V)
+    H = np.eye(len(U)) - 2*np.outer(N, N)
     return H
 
 #2-1 Produit d'une matrice de Householder par un vecteur
