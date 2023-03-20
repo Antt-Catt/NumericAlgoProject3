@@ -128,10 +128,11 @@ puis on "pad" la matrice de Householder avec en bas à droite le corps de la mat
 comme le montre le schéma \ref{img:pad_HH}.
 Cela garantit la préservation de la dimension de la matrice.
 
-\begin{figure}
+\begin{figure}[!htb]
+  \caption[]{}
   \label{img:pad_HH}
   \centering
-  \includegraphics[width=10cm]{../files/hh_padded.png}
+  \includegraphics[width=6cm]{../files/hh_padded.png}
 \end{figure}
 
 \subsection{Analyse}
@@ -221,10 +222,33 @@ Nous prouvons l'induction exactement de la même manière, puisque nous supposon
 \subsection{Compression}
 \label{ssec:compr_img}
 
-\subsection{Analyse quantitative}
+Chaque image peut se décomposer en trois matrices $R$, $G$ et $B$ représentant les valeurs RGB de l'image (valeurs entre 0 et 1).
+On va appliquer la décomposition SVD à chacune des matrices pour les compresser, en annulant les termes diagonaux
+de la matrice $S$ strictement plus grand que le rand de compression $r$. On récupère les 3 matrices compressées qu'on
+recompose pour former l'image compressée. 
+
+Il apparaît un bug : certaines valeurs de la matrice sont supérieures à 1.0 donc illisibles par Python. 
+Afin d'éviter ce problème, on plafonne les valeurs de la matrice compressée à 1.0 (valeur maximum pour un pixel de couleur).
+
+\subsection{Analyses quantitative et qualitative}
 \label{ssec:quanti_img}
 
-\subsection{Analyse qualitative}
-\label{ssec:quali_img}
+Soit (m,n) la taille initiale de l'image $A$.
+D'après la réécriture de l'image en $A = U \cdot S \cdot V$,
+la taille de l'image compréssée est $m \times k + k + k \times n = k \times (1+m+n)$
+
+Alors le ratio de compression, donc le gain en place, est $\frac{m \times n}{k \times (1+m+n)}$ \newline
+
+Dans notre cas, on observe que la transformation est plus lourde que l'image originale au delà du rang 10 de compression.
+
+En particulier, le graphique~\ref{img:ratioCompression} montre l'évolution du ratio de compression en fonction de k, c'est-à-dire l'évolution
+de l'efficacité de cette compression.
+
+\begin{figure}[!htb]
+  \caption[]{}
+  \label{img:ratioCompression}
+  \centering
+  \includegraphics[width=8cm]{../files/ratio_de_compression.png}
+\end{figure}
 
 \end{document}

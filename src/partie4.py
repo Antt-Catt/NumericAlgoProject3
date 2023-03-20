@@ -24,12 +24,30 @@ def compress(A, k) :
 
 
 def compressRGB(img_full, k) :
-    img_comp = np.array([compress(img_full[:,:,0], k), compress(img_full[:,:,1], k), compress(img_full[:,:,2], k)])
+    R = img_full[:,:,0]
+    G = img_full[:,:,1]
+    B = img_full[:,:,2]
+    img_comp = np.array([compress(R, k), compress(G, k), compress(B, k)])
     img_comp = np.swapaxes(img_comp, 0, 1)
     img_comp = np.swapaxes(img_comp, 1, 2)
-    return img_comp
 
+    compressed = (np.minimum(img_comp, 1.0) * 0xff).astype(np.uint8)
+    return compressed
 
+def map_compression_efficiency(img_full):
+    x = list()
+    y = list()
+    original_size = os.stat("../files/p3_takeoff_base.png").st_size
+    for k in range(0,101,5):
+        x.append(k)
+        img_comp = compressRGB(img_full, k)
+        plt.imsave("../files/p3_compress.png", img_comp)
+        y.append(os.stat("../files/p3_compress.png").st_size / original_size)
+    plt.plot(x, y)
+    plt.title("Ratio de compression en fonction du rang k")
+    plt.ylabel("Ratio taille_compressée/taille_originale")
+    plt.xlabel("Rang de compression k")
+    plt.show()
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -38,18 +56,19 @@ if __name__ == "__main__":
     n, m, colors = img_full.shape
     print(n,m,colors)
     np.set_printoptions(formatter={'float': lambda x: "{0:0.1f}".format(x)})
-    print(img_full[:,:,0])
-    print(img_full[:,:,1])
-    print(img_full[:,:,2])
 
-    k=299
+    # relative_rank = 0.2
+    # k = int(relative_rank * min(img_full.shape[0], img_full.shape[1]))
+
+    k = 9
+    print("max rank = %d" % k)
+
     img_comp = compressRGB(img_full, k)
-    print(img_comp[:,:,0])
-    print(img_comp[:,:,1])
-    print(img_comp[:,:,2])
 
-    print()
-    for x in np.nditer(img_comp):
-        if x>=1 :
-            print(x, end=' ')
+    map_compression_efficiency(img_full)
+    print("Map ok !")
+
+    # for x in np.nditer(img_comp):
+    #     if x>=1 :
+    #         print(x, end=' ')
     plt.imsave("../files/p3_compress.png", img_comp)
