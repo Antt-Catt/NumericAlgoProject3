@@ -68,6 +68,13 @@ En particulier nous allons créer 3 algorithmes :
 \subsection{Construction d'une matrice de Householder}
 \label{ssec:construc_householder}
 
+  On utilise pour former l'algorithme householder\_mat(U, V) :
+  \begin{enumerate}
+    \item une fonction auxiliaire qui crée le vecteur $\vec{n}$ normal à l'hyperplan qui place $\vec{U}$ en symétrie avec $\vec{V}$.
+    \item la relation $H = I_d - 2 \times \vec{n} \cdot \vec{n}^t$, qui nous calcule directement la matrice de Householder (l'appelle à la fonction np.outer requiert
+    une complexité en $O(n^2)$)
+  \end{enumerate}
+
 \subsection{Application d'une matrice de Householder}
 \label{ssec:appli_householder}
 
@@ -111,7 +118,7 @@ Le produit matriciel entre $H_{\vec{u},\vec{v}}$ et $A$ optimisé va utiliser la
 $H = I_d - 2 \times N \cdot N^t$. 
 On va utiliser l'application de la matrice de Householder présentée dans la sous-section \ref{ssec:appli_householder} sur 
 chaque vecteur colonne de la matrice $A$, sachant que cette application est en complexité $O(n)$ (un simple produit scalaire).
-L'algorithme ne va alors effectuer qu'un produit vectoriel par colonne de la matrice $A$, ce qui nous donne une complexité en $O(n^2)$.
+L'algorithme ne va alors effectuer qu'un produit scalaire par colonne de la matrice $A$, ce qui nous donne une complexité en $O(n^2)$.
 
 \section{Mise sous forme bidiagonale}
 \label{sec:forme_bidiag_}
@@ -260,12 +267,19 @@ Nous prouvons l'induction exactement de la même manière, puisque nous supposon
 \subsection{Optimisation pour une matrice bidiagonale}
 \label{ssec:opti_bidiag_qr}
 
-\subsection{Mise en forme}
-\label{ssec:mise_en_forme_qr}
+L'algorithme décrivant une version simplifiée de la décomposition $QR$ est transfo\_qr\_simpl(U,V,S), qui fait un nombre d'appels constant à la fonction auxiliaire qr\_simple(A) au lieu de np.linalg.qr
+
+qr\_simpl effectue $n$ tours de boucles, pour chacun de ces tours on applique un produit matriciel par une matrice Householder. Dans notre code source on emploie partie1.householder\_mat par simplicité d'écriture, ce qui n'est pas optimal,
+mais on aurait pu utiliser partie1.produit\_mat\_opti qui est en complexité $O(n^2)$, et la fonction serait alors en complexité $O(n^3)$.
+
+Alors transfo\_qr\_simpl, qui utilise qr\_simpl mais aussi des produits matriciels classiques, est en $O(n^3)$.
 
 
 \section{Application à la compression d'image}
 \label{sec:appli_compr_img}
+
+En utilisant la fonction \verb|svd| de la bibliothèque \verb|NumPy|, nous allons implémenter un algorithme de compression d'image utilisant
+la décomposition en valeurs singulières.
 
 \subsection{Compression}
 \label{ssec:compr_img}
