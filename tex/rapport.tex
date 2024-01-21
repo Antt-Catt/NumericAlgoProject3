@@ -124,7 +124,7 @@ L'algorithme ne va alors effectuer qu'un produit scalaire par colonne de la matr
 \label{sec:forme_bidiag_}
 
 Afin de transformer une matrice sous la forme SVD, on va d'abord chercher à la bidiagonaliser.
-Pour ce faire nous allons utiliser l'algorithme dit de \href[]{https://en.wikipedia.org/wiki/Bidiagonalization}{Golub-Kahan}.
+Pour ce faire nous allons utiliser l'algorithme dit de \href{https://en.wikipedia.org/wiki/Bidiagonalization}{Golub-Kahan}.
 
 \subsection{Implémentation}
 \label{ssec:implem_bidiag_}
@@ -194,15 +194,15 @@ Nous allons tester et montrer la convergence de l'algorithme vers un matrice dia
 
 \begin{figure}[!htb]
   \centering
-  \begin{subfigure}[b]
+  \begin{subfigure}[b]{\linewidth}
     \includegraphics[width=8cm]{../files/conv_diag_4x4.png}
     \caption{Nombre d'EENN de la matrice S 4x4 selon les itérations de l'algorithme de décomposition QR}
     \label{subfig:4x4_conv_diag}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]
+  \begin{subfigure}[b]{\linewidth}
     \includegraphics[width=8cm]{../files/conv_diag_10x10.png}
-    \caption{{Nombre d'EENN de la matrice S 10x10 selon les itérations de l'algorithme de décomposition QR}
+    \caption{Nombre d'EENN de la matrice S 10x10 selon les itérations de l'algorithme de décomposition QR}
     \label{subfig:10x10_grad_prcd}
   \end{subfigure}
 \end{figure}
